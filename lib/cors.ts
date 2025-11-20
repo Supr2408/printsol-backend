@@ -1,16 +1,20 @@
 // lib/cors.ts
 import { NextResponse } from "next/server";
 
-const allowedOrigin = "https://print-sol-frontend-react.vercel.app";
+const allowedOrigins = [
+  "https://print-sol-frontend-react.vercel.app",
+  "http://localhost:5173",
+];
 
 export const corsHeaders = {
-  "Access-Control-Allow-Origin": allowedOrigin,
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Credentials": "true",
   "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Vary": "Origin",
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Response with CORS for JSON data
 export function corsResponse(data: any, status = 200) {
   return new NextResponse(JSON.stringify(data), {
     status,
@@ -21,9 +25,12 @@ export function corsResponse(data: any, status = 200) {
   });
 }
 
+// Preflight OPTIONS handler
 export function corsOptions() {
   return new NextResponse(null, {
     status: 204,
-    headers: corsHeaders,
+    headers: {
+      ...corsHeaders,
+    },
   });
 }
